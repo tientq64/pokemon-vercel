@@ -1,4 +1,4 @@
-import { useRequest } from 'ahooks'
+import { useFavicon, useRequest, useTitle } from 'ahooks'
 import axios from 'axios'
 import clsx from 'clsx'
 import { sumBy, upperFirst } from 'lodash-es'
@@ -6,6 +6,7 @@ import { ReactNode, useMemo } from 'react'
 import { colors } from '../models/colors'
 import { stats } from '../models/stats'
 import { Table } from './Table'
+import { types } from '../models/types'
 
 export function App(): ReactNode {
 	const name = useMemo<string>(() => {
@@ -15,17 +16,23 @@ export function App(): ReactNode {
 		return location.pathname.substring(1)
 	}, [])
 
-	const pokemon = useRequest(async () => {
-		const url: string = `https://pokeapi.co/api/v2/pokemon/${name}`
-		const result = await axios.get(url)
-		return result.data
-	})
-
 	const species = useRequest(async () => {
 		const url: string = `https://pokeapi.co/api/v2/pokemon-species/${name}`
 		const result = await axios.get(url)
+		const variety = result.data.varieties.find((v: any) => v.is_default)
+		const varietyName: string = variety.pokemon.name
+		pokemon.run(varietyName)
 		return result.data
 	})
+
+	const pokemon = useRequest(
+		async (varietyName: string) => {
+			const url: string = `https://pokeapi.co/api/v2/pokemon/${varietyName}`
+			const result = await axios.get(url)
+			return result.data
+		},
+		{ manual: true }
+	)
 
 	const speciesName = useMemo<string | undefined>(() => {
 		return species.data?.names.find((v: any) => v.language.name === 'en')?.name
@@ -39,6 +46,17 @@ export function App(): ReactNode {
 		const filename: string = name.replace(/-/g, '')
 		return `https://play.pokemonshowdown.com/sprites/ani/${filename}.gif`
 	}, [name])
+
+	const iconUrl = useMemo<string>(() => {
+		if (species.data == null) {
+			return ''
+		}
+		const filename: string = species.data.id.toString().padStart(3, '0')
+		return `https://www.serebii.net/pokedex-swsh/icon/${filename}.png`
+	}, [species.data])
+
+	useTitle(speciesName ?? 'Pokémon')
+	useFavicon(iconUrl)
 
 	return (
 		<div className="flex flex-col min-h-screen mx-auto text-gray-900">
@@ -80,9 +98,13 @@ export function App(): ReactNode {
 													{pokemon.data.types.map((type: any) => (
 														<div
 															key={type.slot}
-															className="px-2 rounded bg-gray-200"
+															className="px-2 rounded text-white"
+															style={{
+																backgroundColor:
+																	types[type.type.name].color
+															}}
 														>
-															{upperFirst(type.type.name)}
+															{types[type.type.name].text}
 														</div>
 													))}
 												</div>
