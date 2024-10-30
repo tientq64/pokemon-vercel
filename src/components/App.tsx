@@ -126,7 +126,7 @@ export function App(): ReactNode {
 				</div>
 			)}
 			{species.loading && (
-				<div className="flex-1 flex flex-col justify-center items-center">
+				<div className="flex-1 flex flex-col justify-center items-center bg-gray-100">
 					<div className="font-Skranji text-4xl text-gray-600">Loading...</div>
 				</div>
 			)}
