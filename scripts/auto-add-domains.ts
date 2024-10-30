@@ -1,5 +1,5 @@
 import { Browser, launch, Page } from 'puppeteer-core'
-import names from './pokemon-names.json'
+import { speciesNames } from '../src/models/speciesNames'
 
 function padZero(num: number, len: number): string {
 	return String.prototype.padStart.call(num, len, '0')
@@ -14,7 +14,9 @@ const browser: Browser = await launch({
 
 const page: Page = (await browser.pages())[0]
 
-const len: number = process.env.PROJECT_NAME ? names.length : 49
+speciesNames.unshift('')
+
+const len: number = process.env.PROJECT_NAME ? speciesNames.length : 49
 const start: number = Number(process.env.START)
 const end: number = start + len
 {
@@ -30,7 +32,7 @@ const inputSelector: string = 'input[data-testid="domains/alias-domain-input"]'
 const errorSelector: string = '[data-testid="domains/alias-domain-input/error"]'
 
 for (let i = start; i <= end; i++) {
-	const name: string = names[i]
+	const name: string = speciesNames[i]
 	if (name === undefined) break
 
 	await page.focus(inputSelector)

@@ -2,28 +2,65 @@ import { useFavicon, useRequest, useTitle } from 'ahooks'
 import axios from 'axios'
 import clsx from 'clsx'
 import { sumBy, upperFirst } from 'lodash-es'
-import { ReactNode, useMemo } from 'react'
+import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { colors } from '../models/colors'
 import { stats } from '../models/stats'
-import { Table } from './Table'
 import { types } from '../models/types'
+import { vercelDomainNames } from '../models/vercelDomainNames'
+import { Table } from './Table'
+import TextLoop from 'react-text-loop'
 
 export function App(): ReactNode {
+	const [rollingDomainSpeciesNames] = useState<(string | JSX.Element)[]>([
+		'<pokemon-name>',
+		'palkia',
+		'ho-oh',
+		'mr-mime',
+		<s className="text-pink-900">pikachu</s>,
+		<s className="text-pink-900">mewtwo</s>,
+		'farfetchd',
+		'nidoran-f',
+		'porygon2',
+		'flabebe',
+		'type-null',
+		'tapu-koko',
+		'chien-pao',
+		'castform'
+	])
+
+	const rollingPathSpeciesNames = useMemo<(string | JSX.Element)[]>(
+		() =>
+			rollingDomainSpeciesNames
+				.with(0, '<name-or-national-no>')
+				.with(3, '122')
+				.with(4, 'pikachu')
+				.with(5, '150'),
+		[rollingDomainSpeciesNames]
+	)
+
+	const [imageLoadFailed, setImageLoadFailed] = useState<boolean>(false)
+
 	const name = useMemo<string>(() => {
 		if (location.hostname.endsWith('.vercel.app')) {
-			return location.hostname.split('.')[0]
+			const domainName: string = location.hostname.split('.')[0]
+			if (!vercelDomainNames.includes(domainName)) {
+				return domainName
+			}
 		}
 		return location.pathname.substring(1)
 	}, [])
 
-	const species = useRequest(async () => {
-		const url: string = `https://pokeapi.co/api/v2/pokemon-species/${name}`
-		const result = await axios.get(url)
-		const variety = result.data.varieties.find((v: any) => v.is_default)
-		const varietyName: string = variety.pokemon.name
-		pokemon.run(varietyName)
-		return result.data
-	})
+	const species = useRequest(
+		async () => {
+			const url: string = `https://pokeapi.co/api/v2/pokemon-species/${name}`
+			const result = await axios.get(url)
+			const variety = result.data.varieties.find((v: any) => v.is_default)
+			const varietyName: string = variety.pokemon.name
+			await pokemon.runAsync(varietyName)
+			return result.data
+		},
+		{ manual: true }
+	)
 
 	const pokemon = useRequest(
 		async (varietyName: string) => {
@@ -38,14 +75,17 @@ export function App(): ReactNode {
 		return species.data?.names.find((v: any) => v.language.name === 'en')?.name
 	}, [species.data])
 
-	const generaName = useMemo<string | undefined>(() => {
+	const genusName = useMemo<string | undefined>(() => {
 		return species.data?.genera.find((v: any) => v.language.name === 'en')?.genus
 	}, [species.data])
 
 	const imageUrl = useMemo<string>(() => {
+		if (imageLoadFailed) {
+			return `https://www.smogon.com/dex/media/sprites/xy/${name}.gif`
+		}
 		const filename: string = name.replace(/-/g, '')
 		return `https://play.pokemonshowdown.com/sprites/ani/${filename}.gif`
-	}, [name])
+	}, [name, imageLoadFailed])
 
 	const iconUrl = useMemo<string>(() => {
 		if (species.data == null) {
@@ -55,12 +95,42 @@ export function App(): ReactNode {
 		return `https://www.serebii.net/pokedex-swsh/icon/${filename}.png`
 	}, [species.data])
 
+	const handleImageError = useCallback((): void => {
+		setImageLoadFailed(true)
+	}, [])
+
 	useTitle(speciesName ?? 'Pokémon')
 	useFavicon(iconUrl)
 
+	useEffect(() => {
+		if (name === '') return
+		species.run()
+		return species.cancel
+	}, [name])
+
 	return (
-		<div className="flex flex-col min-h-screen mx-auto text-gray-900">
-			{pokemon.data && species.data && (
+		<div className="flex flex-col min-h-screen text-gray-900">
+			{(name === '' || species.error) && (
+				<div className="flex-1 flex flex-col justify-center items-center px-4 md:px-16 text-center bg-gray-100">
+					<div className="my-4 font-Skranji text-4xl text-gray-700">
+						<TextLoop className="text-pink-600">{rollingDomainSpeciesNames}</TextLoop>
+						.vercel.app
+					</div>
+					<div className="uppercase text-xl text-gray-500">or</div>
+					<div className="my-4 font-Skranji text-4xl text-gray-700">
+						<TextLoop className="text-teal-600">{vercelDomainNames}</TextLoop>
+						.vercel.app/
+						<TextLoop className="text-pink-600">{rollingPathSpeciesNames}</TextLoop>
+					</div>
+					<div className="text-xl text-gray-500">to go to any Pokémon</div>
+				</div>
+			)}
+			{species.loading && (
+				<div className="flex-1 flex flex-col justify-center items-center">
+					<div className="font-Skranji text-4xl text-gray-600">Loading...</div>
+				</div>
+			)}
+			{species.data && (
 				<div
 					className={clsx(
 						'flex-1 flex flex-col bg-gradient-to-b',
@@ -82,6 +152,7 @@ export function App(): ReactNode {
 									className="size-full object-contain image-pixelated"
 									src={imageUrl}
 									alt="Image"
+									onError={handleImageError}
 								/>
 							</div>
 							<div className="flex-1 w-full md:w-auto">
@@ -112,7 +183,7 @@ export function App(): ReactNode {
 										</tr>
 										<tr>
 											<td>Species</td>
-											<td>{generaName}</td>
+											<td>{genusName}</td>
 										</tr>
 										<tr>
 											<td>Height</td>
