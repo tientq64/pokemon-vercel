@@ -29,7 +29,7 @@ export function App(): ReactNode {
 	}, [])
 
 	return (
-		<div className="flex flex-col h-full text-gray-900">
+		<div className="flex flex-col h-full overflow-x-hidden break-words text-gray-900">
 			{(speciesName === '' || getter.error) && <Home />}
 			{getter.loading && <LoadingScreen />}
 			{species && <Species />}

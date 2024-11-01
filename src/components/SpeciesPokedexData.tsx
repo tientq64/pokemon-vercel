@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import { AnimatePresence, Reorder } from 'framer-motion'
+import { Reorder } from 'framer-motion'
 import { noop, upperFirst } from 'lodash-es'
 import { ReactNode } from 'react'
 import { useAppStore } from '../store/useAppStore'

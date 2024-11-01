@@ -14,7 +14,7 @@ export function Table({ className, children }: Props): ReactNode {
 				'[&_tr]:border-b',
 				'[&_tr:last-child]:border-0',
 				'[&_td]:px-2 [&_td]:py-1',
-				'[&_td:first-child]:w-0 [&_td:first-child]:pr-8 [&_td:first-child]:whitespace-nowrap [&_td:first-child]:text-right [&_td:first-child]:text-gray-600',
+				'[&_td:first-child]:w-0 [&_td:first-child]:pr-4 md:[&_td:first-child]:pr-8 [&_td:first-child]:whitespace-nowrap [&_td:first-child]:text-right [&_td:first-child]:text-gray-600',
 				className
 			)}
 		>

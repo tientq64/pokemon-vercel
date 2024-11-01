@@ -1,7 +1,7 @@
+import clsx from 'clsx'
+import { uniqBy } from 'lodash-es'
 import { ReactNode, useMemo } from 'react'
 import { useAppStore } from '../store/useAppStore'
-import clsx from 'clsx'
-import { uniq, uniqBy } from 'lodash-es'
 
 export function SpeciesFormsBar(): ReactNode {
 	const species = useAppStore((state) => state.species)!
@@ -31,7 +31,7 @@ export function SpeciesFormsBar(): ReactNode {
 					))}
 				</>
 			)}
-			{species.forms.length === 1 && <div className="h-10" />}
+			{species.forms.length === 1 && <div className="h-8" />}
 		</div>
 	)
 }

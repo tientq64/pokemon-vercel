@@ -8,10 +8,15 @@ export function Home(): ReactNode {
 
 	return (
 		<div className="h-full bg-gray-100">
-			<div className={clsx('h-full px-4 md:px-16 bg-gradient-to-b', color.gradientClass)}>
+			<div
+				className={clsx(
+					'flex flex-col h-full px-4 md:px-16 bg-gradient-to-b',
+					color.gradientClass
+				)}
+			>
 				<h1
 					className={clsx(
-						'pt-6 px-4 md:px-16 font-Skranji text-center text-5xl',
+						'pt-8 md:pt-6 px-4 md:px-16 font-Skranji text-center text-4xl md:text-5xl',
 						color.nameClass
 					)}
 				>

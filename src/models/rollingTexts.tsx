@@ -16,7 +16,18 @@ export const rollingDomainSpeciesNames: (string | JSX.Element)[] = [
 ]
 
 export const rollingPathSpeciesNames: (string | JSX.Element)[] = rollingDomainSpeciesNames
-	.with(0, '<name-or-national-no>')
+	.with(
+		0,
+		<span>
+			{'<'}
+			pokemon-name
+			<wbr />
+			-or-
+			<wbr />
+			pokedex-number
+			{'>'}
+		</span>
+	)
 	.with(3, '122')
 	.with(4, 'pikachu')
 	.with(5, '150')
