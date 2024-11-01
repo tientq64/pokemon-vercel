@@ -1,6 +1,6 @@
 {
-	"name": "vercel-aa",
-	"version": "0.1.0",
+	"name": "pokemon-vercel",
+	"version": "1.0.0",
 	"type": "module",
 	"scripts": {
 		"start": "vite",
@@ -11,10 +11,12 @@
 		"ahooks": "3.8.1",
 		"axios": "1.7.7",
 		"clsx": "2.1.1",
+		"framer-motion": "11.11.11",
 		"lodash-es": "4.17.21",
 		"react": "^18.3.1",
 		"react-dom": "^18.3.1",
-		"react-text-loop": "2.3.0"
+		"react-text-loop": "2.3.0",
+		"zustand": "5.0.1"
 	},
 	"devDependencies": {
 		"@types/lodash-es": "^4.17.12",
@@ -29,5 +31,6 @@
 		"tsx": "4.19.2",
 		"typescript": "^5.6.3",
 		"vite": "^5.4.10"
-	}
+	},
+	"license": "MIT"
 }
