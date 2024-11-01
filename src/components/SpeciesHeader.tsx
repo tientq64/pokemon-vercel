@@ -8,7 +8,7 @@ export function SpeciesHeader(): ReactNode {
 	return (
 		<h1
 			className={clsx(
-				'pt-8 px-4 md:px-16 font-Skranji text-center text-5xl',
+				'pt-6 px-4 md:px-16 font-Skranji text-center text-5xl',
 				species.color.nameClass
 			)}
 		>

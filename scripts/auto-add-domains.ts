@@ -1,5 +1,6 @@
+import { map } from 'lodash-es'
 import { Browser, launch, Page } from 'puppeteer-core'
-import { speciesNames } from '../src/models/speciesNames'
+import { speciesList } from '../src/models/speciesList'
 
 function padZero(num: number, len: number): string {
 	return String.prototype.padStart.call(num, len, '0')
@@ -14,6 +15,7 @@ const browser: Browser = await launch({
 
 const page: Page = (await browser.pages())[0]
 
+const speciesNames: string[] = map(speciesList, 'name')
 speciesNames.unshift('')
 
 const len: number = process.env.PROJECT_NAME ? speciesNames.length : 49

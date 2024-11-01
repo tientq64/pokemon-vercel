@@ -1,6 +1,8 @@
-import { speciesNames } from '../models/speciesNames'
+import { map } from 'lodash-es'
+import { speciesList } from '../models/speciesList'
 
 const isVercelHost: boolean = location.hostname.endsWith('.vercel.app')
+const speciesNames: string[] = map(speciesList, 'name')
 
 export function extractSpeciesNameFromCurrentPageUrl(): string {
 	if (isVercelHost) {
@@ -13,7 +15,10 @@ export function extractSpeciesNameFromCurrentPageUrl(): string {
 	const speciesNameOrNationalNo: string = location.pathname.substring(1)
 	if (/^\d{1,4}$/.test(speciesNameOrNationalNo)) {
 		const nationalNo: number = Number(speciesNameOrNationalNo)
-		return speciesNames.at(nationalNo - 1) ?? ''
+		if (nationalNo >= 1 && nationalNo <= speciesNames.length) {
+			return speciesNames[nationalNo - 1]
+		}
+		return ''
 	}
 
 	if (speciesNames.includes(speciesNameOrNationalNo)) {

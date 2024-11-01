@@ -1,31 +1,38 @@
 export interface Stat {
+	name: string
 	text: string
-	colorClass: string
+	bgClass: string
 }
 
 export const stats: Record<string, Stat> = {
 	'hp': {
+		name: 'hp',
 		text: 'HP',
-		colorClass: 'bg-rose-500'
+		bgClass: 'bg-lime-500'
 	},
 	'attack': {
+		name: 'attack',
 		text: 'Attack',
-		colorClass: 'bg-orange-500'
+		bgClass: 'bg-yellow-500'
 	},
 	'defense': {
+		name: 'defense',
 		text: 'Defense',
-		colorClass: 'bg-yellow-500'
+		bgClass: 'bg-orange-500'
 	},
 	'special-attack': {
+		name: 'special-attack',
 		text: 'Sp. Atk',
-		colorClass: 'bg-green-500'
+		bgClass: 'bg-sky-500'
 	},
 	'special-defense': {
+		name: 'special-defense',
 		text: 'Sp. Def',
-		colorClass: 'bg-blue-500'
+		bgClass: 'bg-blue-500'
 	},
 	'speed': {
+		name: 'speed',
 		text: 'Speed',
-		colorClass: 'bg-pink-500'
+		bgClass: 'bg-pink-500'
 	}
 }

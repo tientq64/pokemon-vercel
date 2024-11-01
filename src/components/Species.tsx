@@ -2,6 +2,7 @@ import { useFavicon, useTitle } from 'ahooks'
 import clsx from 'clsx'
 import { ReactNode } from 'react'
 import { useAppStore } from '../store/useAppStore'
+import { SpeciesDetails } from './SpeciesDetails'
 import { SpeciesFormsBar } from './SpeciesFormsBar'
 import { SpeciesHeader } from './SpeciesHeader'
 
@@ -15,6 +16,7 @@ export function Species(): ReactNode {
 		<div className={clsx('flex-1 flex flex-col bg-gradient-to-b', species.color.gradientClass)}>
 			<SpeciesHeader />
 			<SpeciesFormsBar />
+			<SpeciesDetails />
 		</div>
 	)
 }
