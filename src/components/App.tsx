@@ -7,7 +7,7 @@ import { Home } from './Home'
 import { LoadingScreen } from './LoadingScreen'
 import { Species } from './Species'
 
-const speciesName = extractSpeciesNameFromCurrentPageUrl()
+const speciesName: string = extractSpeciesNameFromCurrentPageUrl()
 
 export function App(): ReactNode {
 	const species = useAppStore((state) => state.species)
@@ -23,6 +23,7 @@ export function App(): ReactNode {
 	}, [getter.data])
 
 	useEffect(() => {
+		if (speciesName === '') return
 		getter.run(speciesName)
 		return getter.cancel
 	}, [])
